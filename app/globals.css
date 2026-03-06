@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nucleus-black: #0A0A0F;
+  --color-nucleus-dark: #12121A;
+  --color-nucleus-surface: #1A1A24;
+  --color-nucleus-surface-hover: #22222E;
+  --color-nucleus-border: #2A2A38;
+  --color-nucleus-accent: #3B82F6;
+  --color-nucleus-accent-hover: #2563EB;
+  --color-nucleus-accent-muted: #1E3A5F;
+  --color-nucleus-signal: #10B981;
+  --color-nucleus-signal-muted: #064E3B;
+  --color-nucleus-alert: #F59E0B;
+  --color-nucleus-text-primary: #F1F1F3;
+  --color-nucleus-text-secondary: #9CA3AF;
+  --color-nucleus-text-muted: #6B7280;
+
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Satoshi", "DM Sans", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px rgba(59, 130, 246, 0.15);
+
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-tag: 6px;
+  --radius-input: 8px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-nucleus-black);
+  color: var(--color-nucleus-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-nucleus-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-nucleus-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-nucleus-text-muted);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-nucleus-accent-muted);
+  color: var(--color-nucleus-text-primary);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--color-nucleus-accent);
+  outline-offset: 2px;
+}
+
+/* Animation utilities */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-stagger > * {
+  opacity: 0;
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.animate-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.animate-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.animate-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.animate-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.animate-stagger > *:nth-child(6) { animation-delay: 250ms; }
+.animate-stagger > *:nth-child(7) { animation-delay: 300ms; }
+.animate-stagger > *:nth-child(8) { animation-delay: 350ms; }
+
+/* Article markdown styles */
+.prose-nucleus h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--color-nucleus-text-primary);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose-nucleus h3 {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-nucleus-text-primary);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-nucleus p {
+  color: var(--color-nucleus-text-secondary);
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+
+.prose-nucleus strong {
+  color: var(--color-nucleus-text-primary);
+  font-weight: 600;
+}
+
+.prose-nucleus ul, .prose-nucleus ol {
+  color: var(--color-nucleus-text-secondary);
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.prose-nucleus li {
+  margin-bottom: 0.5rem;
+  line-height: 1.75;
+}
+
+.prose-nucleus ul li {
+  list-style-type: disc;
+}
+
+.prose-nucleus ol li {
+  list-style-type: decimal;
+}
+
+.prose-nucleus blockquote {
+  border-left: 3px solid var(--color-nucleus-accent);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--color-nucleus-text-secondary);
+  font-style: italic;
+}
+
+.prose-nucleus a {
+  color: var(--color-nucleus-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-nucleus a:hover {
+  color: var(--color-nucleus-accent-hover);
+}
+
+.prose-nucleus code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  background: var(--color-nucleus-surface);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src=no --import-alias \"@/*\" --use-npm)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(npm install @next/mdx @mdx-js/loader @mdx-js/react gray-matter next-mdx-remote)",
+      "Bash(npm install lucide-react clsx tailwind-merge class-variance-authority)",
+      "Bash(npm install fuse.js)"
+    ]
+  }
+}
