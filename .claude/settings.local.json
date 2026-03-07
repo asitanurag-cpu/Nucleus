@@ -6,7 +6,20 @@
       "Bash(npm --version)",
       "Bash(npm install @next/mdx @mdx-js/loader @mdx-js/react gray-matter next-mdx-remote)",
       "Bash(npm install lucide-react clsx tailwind-merge class-variance-authority)",
-      "Bash(npm install fuse.js)"
+      "Bash(npm install fuse.js)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(lsof -i :3000)",
+      "Bash(kill -9 55369)",
+      "Bash(chmod +x /Users/asitanurag/Documents/Nucleus/scripts/dev.sh)",
+      "Bash(gh auth status)",
+      "Bash(git -C /Users/asitanurag/Documents/Nucleus remote -v)",
+      "Bash(git -C /Users/asitanurag/Documents/Nucleus status --short)",
+      "Bash(sudo cp /tmp/gh/gh_2.67.0_macOS_arm64/bin/gh /usr/local/bin/gh)",
+      "Bash(/usr/local/bin/gh --version)",
+      "Bash(/Users/asitanurag/.local/bin/gh repo view nucleus --json url)",
+      "Bash(git remote add origin https://github.com/asitanurag-cpu/Nucleus.git)",
+      "Bash(git remote set-url origin https://github.com/asitanurag-cpu/Nucleus.git)",
+      "Bash(git add -A)"
     ]
   }
 }
