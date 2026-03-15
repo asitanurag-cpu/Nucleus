@@ -1,18 +1,44 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Zap, Filter } from "lucide-react";
 import { signals } from "@/lib/data/signals";
 import { SignalCard } from "@/components/signals/SignalCard";
 import { SIGNAL_TYPE_CONFIG, SECTOR_LABELS } from "@/lib/constants";
 import { SignalType, SectorTag as SectorTagType } from "@/lib/types";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { Suspense } from "react";
 
-export default function SignalsPage() {
-  const [selectedTypes, setSelectedTypes] = useState<SignalType[]>([]);
-  const [selectedSectors, setSelectedSectors] = useState<SectorTagType[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
-  const [showFilters, setShowFilters] = useState(false);
+function SignalsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Initialize from URL params
+  const [selectedTypes, setSelectedTypes] = useState<SignalType[]>(() => {
+    const t = searchParams.get("type");
+    return t ? (t.split(",") as SignalType[]) : [];
+  });
+  const [selectedSectors, setSelectedSectors] = useState<SectorTagType[]>(() => {
+    const s = searchParams.get("sector");
+    return s ? (s.split(",") as SectorTagType[]) : [];
+  });
+  const [selectedCountry, setSelectedCountry] = useState<string>(
+    searchParams.get("country") || ""
+  );
+  const [showFilters, setShowFilters] = useState(
+    () => !!(searchParams.get("type") || searchParams.get("sector") || searchParams.get("country"))
+  );
+
+  // Sync filters to URL params
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedTypes.length > 0) params.set("type", selectedTypes.join(","));
+    if (selectedSectors.length > 0) params.set("sector", selectedSectors.join(","));
+    if (selectedCountry) params.set("country", selectedCountry);
+    const qs = params.toString();
+    router.replace(`/signals${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [selectedTypes, selectedSectors, selectedCountry, router]);
 
   const allCountries = useMemo(() => {
     const set = new Set<string>();
@@ -47,6 +73,12 @@ export default function SignalsPage() {
     setSelectedSectors((prev) =>
       prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
     );
+  };
+
+  const clearAll = () => {
+    setSelectedTypes([]);
+    setSelectedSectors([]);
+    setSelectedCountry("");
   };
 
   return (
@@ -137,7 +169,7 @@ export default function SignalsPage() {
             <select
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
-              className="rounded-input border border-nucleus-border bg-nucleus-dark px-3 py-2 text-sm text-nucleus-text-primary"
+              className="rounded-button border border-nucleus-border bg-nucleus-dark px-3 py-2 text-sm text-nucleus-text-primary"
             >
               <option value="">All Countries</option>
               {allCountries.map((c) => (
@@ -146,13 +178,19 @@ export default function SignalsPage() {
             </select>
           </div>
           <button
-            onClick={() => { setSelectedTypes([]); setSelectedSectors([]); setSelectedCountry(""); }}
+            onClick={clearAll}
             className="text-xs text-nucleus-text-muted hover:text-nucleus-accent transition-colors"
           >
             Clear all filters
           </button>
         </div>
       )}
+
+      {/* Counter */}
+      <p className="mb-4 text-sm text-nucleus-text-secondary">
+        Showing <span className="font-semibold text-nucleus-text-primary">{filtered.length}</span> of{" "}
+        <span className="font-semibold text-nucleus-text-primary">{signals.length}</span> signals
+      </p>
 
       {/* Signal grid */}
       {filtered.length > 0 ? (
@@ -164,10 +202,14 @@ export default function SignalsPage() {
       ) : (
         <EmptyState title="No signals found" description="Try adjusting your filters." />
       )}
-
-      <p className="mt-4 text-center text-xs text-nucleus-text-muted">
-        Showing {filtered.length} of {signals.length} signals
-      </p>
     </div>
+  );
+}
+
+export default function SignalsPage() {
+  return (
+    <Suspense>
+      <SignalsContent />
+    </Suspense>
   );
 }

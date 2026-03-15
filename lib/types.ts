@@ -31,25 +31,6 @@ export interface Article {
   seo_description: string;
 }
 
-export interface FundingRound {
-  id: string;
-  startup_name: string;
-  startup_url: string;
-  startup_description: string;
-  amount: number;
-  currency: "EUR" | "USD" | "GBP" | "CHF" | "SEK" | "NOK" | "DKK";
-  amount_usd: number;
-  stage: StageTag | "undisclosed";
-  lead_investors: string[];
-  other_investors: string[];
-  sector_tags: SectorTag[];
-  country: string;
-  city: string;
-  date_announced: string;
-  source_url: string;
-  added_at: string;
-}
-
 export interface FounderBrief {
   name: string;
   role: string;
@@ -73,8 +54,30 @@ export interface Signal {
   founding_team: FounderBrief[];
   product_url: string;
   estimated_stage: "pre_seed" | "seed" | "series_a";
+  cover_image_url?: string;
   added_at: string;
   source_url: string;
+  description?: string;
+}
+
+export interface FundingRound {
+  id: string;
+  startup_name: string;
+  startup_url: string;
+  startup_description: string;
+  amount: number;
+  currency: "EUR" | "USD" | "GBP" | "CHF" | "SEK" | "NOK" | "DKK";
+  amount_usd: number;
+  stage: StageTag | "undisclosed";
+  lead_investors: string[];
+  other_investors: string[];
+  sector_tags: SectorTag[];
+  country: string;
+  city: string;
+  date_announced: string;
+  source_url: string;
+  added_at: string;
+  description?: string;
 }
 
 export interface Partner {

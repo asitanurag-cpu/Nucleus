@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Article } from "@/lib/types";
 import { SectorTag } from "@/components/shared/SectorTag";
@@ -22,16 +23,26 @@ export function ArticleCard({
         className
       )}
     >
-      {/* Cover image placeholder */}
+      {/* Cover image */}
       <div
         className={cn(
           "relative overflow-hidden rounded-t-card bg-gradient-to-br from-nucleus-accent-muted to-nucleus-surface",
           featured ? "h-64" : "h-44"
         )}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="font-display text-4xl text-nucleus-accent/20">N</div>
-        </div>
+        {article.cover_image ? (
+          <Image
+            src={article.cover_image}
+            alt={article.title}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes={featured ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="font-display text-4xl text-nucleus-accent/20">N</div>
+          </div>
+        )}
       </div>
 
       <div className="p-5">

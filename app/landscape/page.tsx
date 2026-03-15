@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Building2, Filter, Search, Star } from "lucide-react";
 import { vcFirms } from "@/lib/data/vc-firms";
@@ -12,12 +13,36 @@ import { formatCurrency, cn } from "@/lib/utils";
 import { getScoreColor, getScoreBg } from "@/lib/signal-score";
 import { EmptyState } from "@/components/shared/EmptyState";
 
-export default function LandscapePage() {
-  const [search, setSearch] = useState("");
-  const [selectedStages, setSelectedStages] = useState<StageTagType[]>([]);
-  const [selectedSectors, setSelectedSectors] = useState<SectorTagType[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
-  const [showFilters, setShowFilters] = useState(false);
+function LandscapeContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [search, setSearch] = useState(searchParams.get("q") || "");
+  const [selectedStages, setSelectedStages] = useState<StageTagType[]>(() => {
+    const s = searchParams.get("stage");
+    return s ? (s.split(",") as StageTagType[]) : [];
+  });
+  const [selectedSectors, setSelectedSectors] = useState<SectorTagType[]>(() => {
+    const s = searchParams.get("sector");
+    return s ? (s.split(",") as SectorTagType[]) : [];
+  });
+  const [selectedCountry, setSelectedCountry] = useState<string>(
+    searchParams.get("country") || ""
+  );
+  const [showFilters, setShowFilters] = useState(
+    () => !!(searchParams.get("stage") || searchParams.get("sector") || searchParams.get("country"))
+  );
+
+  // Sync to URL params
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (search) params.set("q", search);
+    if (selectedStages.length > 0) params.set("stage", selectedStages.join(","));
+    if (selectedSectors.length > 0) params.set("sector", selectedSectors.join(","));
+    if (selectedCountry) params.set("country", selectedCountry);
+    const qs = params.toString();
+    router.replace(`/landscape${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [search, selectedStages, selectedSectors, selectedCountry, router]);
 
   const allCountries = useMemo(() => {
     const set = new Set<string>();
@@ -54,6 +79,13 @@ export default function LandscapePage() {
     setSelectedSectors((prev) => prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]);
   };
 
+  const clearAll = () => {
+    setSelectedStages([]);
+    setSelectedSectors([]);
+    setSelectedCountry("");
+    setSearch("");
+  };
+
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-12 lg:px-6 lg:py-16">
       {/* Header */}
@@ -79,7 +111,7 @@ export default function LandscapePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by fund name..."
-            className="w-full rounded-input border border-nucleus-border bg-nucleus-surface pl-10 pr-4 py-2.5 text-sm text-nucleus-text-primary placeholder:text-nucleus-text-muted focus:border-nucleus-accent focus:outline-none"
+            className="w-full rounded-button border border-nucleus-border bg-nucleus-surface pl-10 pr-4 py-2.5 text-sm text-nucleus-text-primary placeholder:text-nucleus-text-muted focus:border-nucleus-accent focus:outline-none"
           />
         </div>
         <button
@@ -87,6 +119,11 @@ export default function LandscapePage() {
           className="inline-flex items-center gap-2 rounded-button border border-nucleus-border bg-nucleus-surface px-4 py-2 text-sm font-medium text-nucleus-text-secondary transition-colors hover:bg-nucleus-surface-hover"
         >
           <Filter className="h-4 w-4" /> Filters
+          {(selectedStages.length + selectedSectors.length + (selectedCountry ? 1 : 0)) > 0 && (
+            <span className="rounded-full bg-nucleus-accent px-1.5 py-0.5 text-xs text-white">
+              {selectedStages.length + selectedSectors.length + (selectedCountry ? 1 : 0)}
+            </span>
+          )}
         </button>
       </div>
 
@@ -117,17 +154,23 @@ export default function LandscapePage() {
           <div>
             <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.05em] text-nucleus-text-muted">Country</label>
             <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)}
-              className="rounded-input border border-nucleus-border bg-nucleus-dark px-3 py-2 text-sm text-nucleus-text-primary">
+              className="rounded-button border border-nucleus-border bg-nucleus-dark px-3 py-2 text-sm text-nucleus-text-primary">
               <option value="">All Countries</option>
               {allCountries.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
-          <button onClick={() => { setSelectedStages([]); setSelectedSectors([]); setSelectedCountry(""); setSearch(""); }}
+          <button onClick={clearAll}
             className="text-xs text-nucleus-text-muted hover:text-nucleus-accent transition-colors">
             Clear all filters
           </button>
         </div>
       )}
+
+      {/* Counter */}
+      <p className="mb-4 text-sm text-nucleus-text-secondary">
+        Showing <span className="font-semibold text-nucleus-text-primary">{filtered.length}</span> of{" "}
+        <span className="font-semibold text-nucleus-text-primary">{vcFirms.length}</span> VC firms
+      </p>
 
       {/* VC Cards */}
       {filtered.length > 0 ? (
@@ -184,10 +227,14 @@ export default function LandscapePage() {
       ) : (
         <EmptyState title="No VC firms found" description="Try adjusting your filters or search." />
       )}
-
-      <p className="mt-4 text-center text-xs text-nucleus-text-muted">
-        Showing {filtered.length} of {vcFirms.length} VC firms
-      </p>
     </div>
+  );
+}
+
+export default function LandscapePage() {
+  return (
+    <Suspense>
+      <LandscapeContent />
+    </Suspense>
   );
 }

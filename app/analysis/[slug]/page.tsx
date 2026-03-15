@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Clock, Calendar, Share2 } from "lucide-react";
 import { articles } from "@/lib/data/articles";
 import { SectorTag } from "@/components/shared/SectorTag";
@@ -23,6 +24,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       type: "article",
       publishedTime: article.published_at,
       authors: [article.author],
+      ...(article.cover_image
+        ? { images: [{ url: article.cover_image, width: 1200, height: 630 }] }
+        : {}),
     },
   };
 }
@@ -120,6 +124,24 @@ export default async function ArticlePage({ params }: { params: Params }) {
           {article.country_tags[0] && <span>{article.country_tags.join(", ")}</span>}
         </div>
       </header>
+
+      {/* Hero image */}
+      <div className="mx-auto mt-8 max-w-reading overflow-hidden rounded-card">
+        {article.cover_image ? (
+          <div className="relative aspect-[16/7]">
+            <Image
+              src={article.cover_image}
+              alt={`${article.title} — Nucleus Analysis`}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 100vw, 720px"
+            />
+          </div>
+        ) : (
+          <div className="aspect-[16/7] bg-gradient-to-br from-[#1A3A6B] to-[#2E5FAC]" />
+        )}
+      </div>
 
       {/* Article body */}
       <div className="prose-nucleus mx-auto mt-8 max-w-reading">

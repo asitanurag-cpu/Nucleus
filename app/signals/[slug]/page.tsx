@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Linkedin } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, ExternalLink, Linkedin, Info } from "lucide-react";
 import { signals } from "@/lib/data/signals";
 import { SectorTag } from "@/components/shared/SectorTag";
 import { SIGNAL_TYPE_CONFIG, STAGE_LABELS } from "@/lib/constants";
@@ -18,6 +19,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return {
     title: `${signal.startup_name} — Signal Profile | Nucleus`,
     description: signal.startup_description,
+    openGraph: {
+      title: `${signal.startup_name} — Signal Profile | Nucleus`,
+      description: signal.startup_description,
+      ...(signal.cover_image_url
+        ? { images: [{ url: signal.cover_image_url, width: 1200, height: 630 }] }
+        : {}),
+    },
   };
 }
 
@@ -62,6 +70,24 @@ export default async function SignalProfilePage({ params }: { params: Params }) 
             <p className="mt-2 text-lg text-nucleus-text-secondary">
               {primary.startup_description}
             </p>
+          </div>
+
+          {/* Hero image */}
+          <div className="mb-8 overflow-hidden rounded-card">
+            {primary.cover_image_url ? (
+              <div className="relative aspect-[16/7]">
+                <Image
+                  src={primary.cover_image_url}
+                  alt={`${primary.startup_name} — Nucleus Signal`}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 800px"
+                />
+              </div>
+            ) : (
+              <div className="aspect-[16/7] bg-gradient-to-br from-[#1A3A6B] to-[#2E5FAC]" />
+            )}
           </div>
 
           {/* Signal timeline */}
@@ -137,12 +163,29 @@ export default async function SignalProfilePage({ params }: { params: Params }) 
         <div className="space-y-5">
           {/* Signal Score */}
           <div className="rounded-card border border-nucleus-border bg-nucleus-surface p-5 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.05em] text-nucleus-text-muted">Signal Score</p>
+            <div className="flex items-center justify-center gap-1.5">
+              <p className="text-xs font-semibold uppercase tracking-[0.05em] text-nucleus-text-muted">Signal Score</p>
+              <div className="group relative">
+                <Info className="h-3.5 w-3.5 text-nucleus-text-muted cursor-help" />
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-lg border border-nucleus-border bg-nucleus-dark p-3 text-left opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  <p className="mb-1.5 text-xs font-semibold text-nucleus-text-primary">Nucleus Signal Score</p>
+                  <p className="text-[11px] leading-relaxed text-nucleus-text-secondary">
+                    Composite score (0–100) across four equal dimensions: Team Strength (25pts), Market Timing (25pts), Deal Velocity (25pts), Signal Quality (25pts). Scores 75+ are tracked as High Conviction.
+                  </p>
+                  <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-nucleus-border bg-nucleus-dark" />
+                </div>
+              </div>
+            </div>
             <div className={cn("mt-2 mx-auto flex h-20 w-20 items-center justify-center rounded-full", getScoreBg(primary.signal_score))}>
               <span className={cn("font-mono text-2xl font-bold", getScoreColor(primary.signal_score))}>
                 {primary.signal_score}
               </span>
             </div>
+            {primary.signal_score >= 75 && (
+              <p className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-400">
+                High Conviction
+              </p>
+            )}
           </div>
 
           {/* Details */}

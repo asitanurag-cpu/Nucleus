@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SearchBar } from "@/components/shared/SearchBar";
 
 const navLinks = [
   { href: "/analysis", label: "Analysis" },
@@ -44,12 +45,7 @@ export function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <button
-            className="rounded-button p-2 text-nucleus-text-muted transition-colors hover:bg-nucleus-surface hover:text-nucleus-text-primary"
-            aria-label="Search"
-          >
-            <Search className="h-4 w-4" />
-          </button>
+          <SearchBar />
           <Link
             href="/about"
             className="hidden rounded-button bg-nucleus-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-nucleus-accent-hover md:inline-flex"

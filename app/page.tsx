@@ -14,6 +14,23 @@ import { STAGE_LABELS } from "@/lib/constants";
 import { StageTag as StageTagType } from "@/lib/types";
 
 export default function HomePage() {
+  // Dynamic metric computations
+  const startupsTracked = new Set([
+    ...articles.map((a) => a.title),
+    ...signals.map((s) => s.startup_name),
+  ]).size;
+
+  const countriesCovered = new Set([
+    ...signals.map((s) => s.country),
+    ...fundingRounds.map((f) => f.country),
+  ]).size;
+
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const signalsThisWeek = signals.filter(
+    (s) => new Date(s.signal_date) >= oneWeekAgo
+  ).length || signals.length;
+
   const publishedArticles = articles
     .filter((a) => a.status === "published")
     .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
@@ -38,9 +55,9 @@ export default function HomePage() {
               <span className="text-nucleus-accent">European venture capital.</span>
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-nucleus-text-secondary md:text-xl">
-              Startup analysis. Signal tracking. VC landscape intelligence.
+              Pre-funding signals and investment-grade analysis
               <br className="hidden md:block" />
-              Built for investors and founders operating in Europe.
+              for the European ecosystem.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -58,13 +75,19 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Stats bar */}
+          {/* Stats bar — dynamic + linked */}
           <div className="mx-auto mt-16 flex max-w-2xl items-center justify-center gap-8 rounded-card border border-nucleus-border bg-nucleus-surface/50 px-8 py-5 backdrop-blur-sm md:gap-12">
-            <MetricCard value="100+" label="Startups Tracked" />
+            <Link href="/signals" className="transition-colors hover:opacity-80">
+              <MetricCard value={`${startupsTracked}`} label="Startups Tracked" />
+            </Link>
             <div className="h-8 w-px bg-nucleus-border" />
-            <MetricCard value="30+" label="Countries" />
+            <Link href="/landscape" className="transition-colors hover:opacity-80">
+              <MetricCard value={`${countriesCovered}`} label="Countries Covered" />
+            </Link>
             <div className="h-8 w-px bg-nucleus-border" />
-            <MetricCard value="Weekly" label="Signal Reports" />
+            <Link href="/signals" className="transition-colors hover:opacity-80">
+              <MetricCard value={`${signalsThisWeek}`} label="Signals This Week" />
+            </Link>
           </div>
         </div>
       </section>
@@ -254,7 +277,7 @@ export default function HomePage() {
       </section>
 
       {/* About / Credibility Bar */}
-      <section className="py-16 lg:py-20">
+      <section className="border-b border-nucleus-border py-16 lg:py-20">
         <div className="mx-auto max-w-[1200px] px-4 lg:px-6">
           <div className="rounded-card border border-nucleus-border bg-nucleus-surface p-8 text-center lg:p-12">
             <Globe className="mx-auto mb-4 h-8 w-8 text-nucleus-accent" />
@@ -270,7 +293,7 @@ export default function HomePage() {
               <MetricCard value="100+" label="Deals Screened" />
               <MetricCard value="$20M+" label="Series A Led" />
               <MetricCard value="6+" label="Years Operating" />
-              <MetricCard value="730" label="GMAT Score" />
+              <MetricCard value={`${startupsTracked}+`} label="Startups Tracked" />
             </div>
             <Link
               href="/about"
@@ -278,6 +301,44 @@ export default function HomePage() {
             >
               Learn more about Nucleus <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Nucleus? Differentiation Block */}
+      <section className="py-16 lg:py-20">
+        <div className="mx-auto max-w-[1200px] px-4 lg:px-6">
+          <h2 className="mb-8 text-center font-display text-2xl tracking-tight text-nucleus-text-primary md:text-3xl">
+            Why Nucleus?
+          </h2>
+          <div className="grid gap-5 md:grid-cols-3">
+            <div className="rounded-card border border-nucleus-border bg-nucleus-surface p-6 border-l-[3px] border-l-nucleus-accent">
+              <h3 className="mb-3 font-body text-base font-semibold text-nucleus-text-primary">
+                Original Analysis, Not Data Records
+              </h3>
+              <p className="text-sm leading-relaxed text-nucleus-text-secondary">
+                Unlike Dealroom and Crunchbase, every piece is original editorial analysis
+                written by a practitioner — not auto-generated from a database.
+              </p>
+            </div>
+            <div className="rounded-card border border-nucleus-border bg-nucleus-surface p-6 border-l-[3px] border-l-nucleus-accent">
+              <h3 className="mb-3 font-body text-base font-semibold text-nucleus-text-primary">
+                Pre-Funding, Not Post-Deal
+              </h3>
+              <p className="text-sm leading-relaxed text-nucleus-text-secondary">
+                Unlike Sifted, we track signals before rounds close — grants, key hires,
+                accelerator acceptances — so you see what&apos;s coming, not what&apos;s done.
+              </p>
+            </div>
+            <div className="rounded-card border border-nucleus-border bg-nucleus-surface p-6 border-l-[3px] border-l-nucleus-accent">
+              <h3 className="mb-3 font-body text-base font-semibold text-nucleus-text-primary">
+                Operator-Authored Intelligence
+              </h3>
+              <p className="text-sm leading-relaxed text-nucleus-text-secondary">
+                Every signal and analysis is authored by someone who has screened 100+ deals
+                and run a $20M+ Series A — not a journalist chasing page views.
+              </p>
+            </div>
           </div>
         </div>
       </section>

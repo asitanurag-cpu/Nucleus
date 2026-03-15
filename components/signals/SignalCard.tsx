@@ -62,21 +62,30 @@ export function SignalCard({
           )}
         </div>
 
-        {/* Signal score */}
-        <div
-          className={cn(
-            "flex h-12 w-12 shrink-0 items-center justify-center rounded-card",
-            getScoreBg(signal.signal_score)
-          )}
-        >
-          <span
+        {/* Signal score with tooltip */}
+        <div className="group/score relative shrink-0">
+          <div
             className={cn(
-              "font-mono text-sm font-semibold",
-              getScoreColor(signal.signal_score)
+              "flex h-12 w-12 items-center justify-center rounded-card",
+              getScoreBg(signal.signal_score)
             )}
           >
-            {signal.signal_score}
-          </span>
+            <span
+              className={cn(
+                "font-mono text-sm font-semibold",
+                getScoreColor(signal.signal_score)
+              )}
+            >
+              {signal.signal_score}
+            </span>
+          </div>
+          <div className="pointer-events-none absolute bottom-full right-0 z-50 mb-2 w-56 rounded-lg border border-nucleus-border bg-nucleus-dark p-2.5 text-left opacity-0 shadow-lg transition-opacity group-hover/score:opacity-100">
+            <p className="mb-1 text-[10px] font-semibold text-nucleus-text-primary">Nucleus Signal Score</p>
+            <p className="text-[10px] leading-relaxed text-nucleus-text-secondary">
+              Composite 0–100 across Team Strength (25), Market Timing (25), Deal Velocity (25), Signal Quality (25). 75+ = High Conviction.
+            </p>
+            <div className="absolute -bottom-1 right-4 h-2 w-2 rotate-45 border-b border-r border-nucleus-border bg-nucleus-dark" />
+          </div>
         </div>
       </div>
     </Link>
