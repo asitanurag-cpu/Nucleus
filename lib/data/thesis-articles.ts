@@ -28,9 +28,9 @@ Mistral also made a choice that their American competitors hadn\u2019t: they rel
 
 Mistral could have headquartered anywhere. They chose Paris, and they\u2019ve stayed there.
 
-The decision was strategic, not sentimental. European enterprises \u2014 banks, insurers, manufacturers, public sector organizations \u2014 have GDPR obligations and data sovereignty requirements that make deploying American AI models legally and operationally complicated. A Paris-headquartered company, building models trained on European data and governed by European law, is a fundamentally different product for those customers.
+The decision was strategic, not sentimental. European enterprises, banks, insurers, manufacturers, public sector organizations, have GDPR obligations and data sovereignty requirements that make deploying American AI models legally and operationally complicated. A Paris-headquartered company, building models trained on European data and governed by European law, is a fundamentally different product for those customers.
 
-French President Emmanuel Macron publicly endorsed Le Chat, Mistral\u2019s consumer assistant, over ChatGPT. Bpifrance, the state investment bank, participated in funding rounds. When Mistral announced the Mistral Compute platform \u2014 a planned AI cloud service powered by 18,000 Nvidia Grace Blackwell chips running on nuclear energy, to be launched in 2026 \u2014 they were positioning Europe\u2019s AI infrastructure to stand on its own feet, independent of Amazon, Microsoft, and Google\u2019s cloud dominance.
+French President Emmanuel Macron publicly endorsed Le Chat, Mistral\u2019s consumer assistant, over ChatGPT. Bpifrance, the state investment bank, participated in funding rounds. When Mistral announced the Mistral Compute platform, a planned AI cloud service powered by 18,000 Nvidia Grace Blackwell chips running on nuclear energy to be launched in 2026, they were positioning Europe\u2019s AI infrastructure to stand on its own feet, independent of Amazon, Microsoft, and Google\u2019s cloud dominance.
 
 That sovereignty angle has proven to be more than rhetoric. Mistral dominates European enterprise AI deployments in a way that OpenAI, for all its global reach, has struggled to match. In markets where data sovereignty concerns outweigh raw benchmark performance, being European is a genuine competitive moat.
 
@@ -64,7 +64,7 @@ Mistral is a counterargument to that narrative. It was founded in Europe, has ra
 
 The European AI ecosystem funded 12 new unicorns in the first half of 2025 alone. Venture funding in European AI was up 55% in Q1. The momentum is real, and Mistral is at the center of it.
 
-Whether Mistral can close the gap with OpenAI and Anthropic \u2014 companies with 20 to 35 times Mistral\u2019s valuation and vastly more capital \u2014 remains genuinely uncertain. But the question no longer seems absurd. And two years ago, it would have.
+Whether Mistral can close the gap with OpenAI and Anthropic, companies with 20 to 35 times Mistral\u2019s valuation and vastly more capital, remains genuinely uncertain. But the question no longer seems absurd. And two years ago, it would have.
 
 That\u2019s progress. In the AI race, progress compounds.`,
     cover_image: "https://picsum.photos/id/0/1200/800",
