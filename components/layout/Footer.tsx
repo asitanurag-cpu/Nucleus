@@ -6,7 +6,7 @@ const footerLinks = {
     { href: "/funding", label: "Funding Tracker" },
     { href: "/signals", label: "Signal Tracker" },
     { href: "/landscape", label: "VC Landscape" },
-    { href: "/playbooks", label: "Playbooks" },
+    { href: "/library", label: "Library" },
   ],
   Company: [
     { href: "/about", label: "About" },

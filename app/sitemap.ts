@@ -3,6 +3,7 @@ import { articles } from "@/lib/data/articles";
 import { signals } from "@/lib/data/signals";
 import { vcFirms } from "@/lib/data/vc-firms";
 import { playbooks } from "@/lib/data/playbooks";
+import { thesisArticles } from "@/lib/data/thesis-articles";
 
 const BASE_URL = "https://nucleusvc.com";
 
@@ -13,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/funding`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
     { url: `${BASE_URL}/signals`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
     { url: `${BASE_URL}/landscape`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${BASE_URL}/playbooks`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
+    { url: `${BASE_URL}/library`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
     { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
     { url: `${BASE_URL}/newsletter`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
   ];
@@ -42,11 +43,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const playbookPages = playbooks.map((p) => ({
-    url: `${BASE_URL}/playbooks/${p.slug}`,
+    url: `${BASE_URL}/library/${p.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
 
-  return [...staticPages, ...articlePages, ...signalPages, ...vcPages, ...playbookPages];
+  const thesisPages = thesisArticles.map((t) => ({
+    url: `${BASE_URL}/library/thesis/${t.slug}`,
+    lastModified: new Date(t.published_at),
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+  }));
+
+  return [...staticPages, ...articlePages, ...signalPages, ...vcPages, ...playbookPages, ...thesisPages];
 }

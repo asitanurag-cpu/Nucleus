@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/funding", label: "Funding" },
   { href: "/signals", label: "Signals" },
   { href: "/landscape", label: "Landscape" },
-  { href: "/playbooks", label: "Playbooks" },
+  { href: "/library", label: "Library" },
 ];
 
 export function Navbar() {

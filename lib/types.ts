@@ -158,3 +158,21 @@ export interface Playbook {
   reading_time_minutes: number;
   content: string;
 }
+
+export interface ThesisArticle {
+  id: string;
+  slug: string;
+  title: string;
+  central_question: string;
+  subtitle: string;
+  excerpt: string;
+  body: string;
+  cover_image: string;
+  author: string;
+  category: string;
+  topic_tags: string[];
+  reading_time_minutes: number;
+  published_at: string;
+  updated_at: string;
+  status: "draft" | "published";
+}
