@@ -20,7 +20,10 @@ export type EnergySignalType =
   | "ppa_signing"
   | "innovation_fund_award"
   | "executive_hire"
-  | "patent_filing";
+  | "patent_filing"
+  | "rvo_grant_award"
+  | "nwo_research_award"
+  | "kvk_spinoff";
 
 export type IntelSignalType = AgriSignalType | EnergySignalType;
 

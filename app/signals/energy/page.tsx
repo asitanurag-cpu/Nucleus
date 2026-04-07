@@ -17,6 +17,9 @@ const ENERGY_TYPES: EnergySignalType[] = [
   "innovation_fund_award",
   "executive_hire",
   "patent_filing",
+  "rvo_grant_award",
+  "nwo_research_award",
+  "kvk_spinoff",
 ];
 
 export default function EnergySignalsPage() {
@@ -61,8 +64,8 @@ export default function EnergySignalsPage() {
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-nucleus-text-secondary">
           Track IPCEI milestones, grid tenders, PPA signings, innovation fund
-          awards, executive hires, and patents across European clean energy
-          startups.
+          awards, RVO grants, NWO research awards, KVK spin-offs, executive
+          hires, and patents across European clean energy startups.
         </p>
       </div>
 

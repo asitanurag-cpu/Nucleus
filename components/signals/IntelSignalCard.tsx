@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { INTEL_SIGNAL_TYPE_CONFIG, getIntelScoreStyle } from "@/lib/signal-type-config";
 import type { IntelSignal } from "@/lib/types/signals";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 
 export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
+  const [expanded, setExpanded] = useState(false);
   const typeConfig = INTEL_SIGNAL_TYPE_CONFIG[signal.signal_type] ?? {
     label: signal.signal_type,
     chipClass: "bg-zinc-500/15 text-zinc-400 border border-zinc-500/20",
@@ -14,12 +16,18 @@ export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
   const scoreStyle = getIntelScoreStyle(signal.fundraise_probability_score);
 
   return (
-    <article className="group rounded-card border border-nucleus-border bg-nucleus-surface p-4 transition-all hover:border-nucleus-accent/30 hover:shadow-glow">
+    <article
+      onClick={() => setExpanded(!expanded)}
+      className={cn(
+        "group cursor-pointer rounded-card border border-nucleus-border bg-nucleus-surface p-4 transition-all hover:border-nucleus-accent/30 hover:shadow-glow",
+        expanded && "border-nucleus-accent/40 shadow-glow"
+      )}
+    >
       {/* Top row: company + type chip + score */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="mb-2 flex items-center gap-2 flex-wrap">
-            <h3 className="text-sm font-semibold text-nucleus-text-primary">
+            <h3 className="text-sm font-semibold text-nucleus-text-primary group-hover:text-nucleus-accent transition-colors">
               {signal.company_name}
             </h3>
             <span
@@ -33,11 +41,23 @@ export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
           </div>
 
           {/* Headline */}
-          <p className="text-xs leading-relaxed text-nucleus-text-secondary line-clamp-2">
+          <p className={cn(
+            "text-xs leading-relaxed text-nucleus-text-secondary",
+            !expanded && "line-clamp-2"
+          )}>
             {signal.headline}
           </p>
 
-          {/* Footer: source + timestamp + link */}
+          {/* Expanded body */}
+          {expanded && signal.body && (
+            <div className="mt-3 rounded-lg border border-nucleus-border/50 bg-nucleus-dark/50 p-3">
+              <p className="text-xs leading-relaxed text-nucleus-text-secondary">
+                {signal.body}
+              </p>
+            </div>
+          )}
+
+          {/* Footer: source + timestamp + link + expand hint */}
           <div className="mt-3 flex items-center gap-2 text-[11px] text-nucleus-text-muted">
             <span>{signal.source_name}</span>
             <span className="text-nucleus-border">·</span>
@@ -52,10 +72,20 @@ export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
               href={signal.source_url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center gap-1 text-nucleus-accent hover:underline"
             >
               Source <ExternalLink className="h-3 w-3" />
             </a>
+            {signal.body && (
+              <span className="ml-auto inline-flex items-center gap-0.5 text-nucleus-text-muted">
+                {expanded ? (
+                  <ChevronUp className="h-3 w-3" />
+                ) : (
+                  <ChevronDown className="h-3 w-3" />
+                )}
+              </span>
+            )}
           </div>
         </div>
 

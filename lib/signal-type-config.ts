@@ -53,6 +53,19 @@ export const INTEL_SIGNAL_TYPE_CONFIG: Record<
     label: "Innovation Fund",
     chipClass: "bg-violet-500/15 text-violet-400 border border-violet-500/20",
   },
+  // Dutch institutional sources
+  rvo_grant_award: {
+    label: "RVO Grant",
+    chipClass: "bg-indigo-500/15 text-indigo-400 border border-indigo-500/20",
+  },
+  nwo_research_award: {
+    label: "NWO Award",
+    chipClass: "bg-purple-500/15 text-purple-400 border border-purple-500/20",
+  },
+  kvk_spinoff: {
+    label: "KVK Spin-off",
+    chipClass: "bg-teal-500/15 text-teal-400 border border-teal-500/20",
+  },
 };
 
 // Score colour mapping: grey < 40, amber 40-69, green >= 70
