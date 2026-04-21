@@ -67,7 +67,7 @@ The European AI ecosystem funded 12 new unicorns in the first half of 2025 alone
 Whether Mistral can close the gap with OpenAI and Anthropic, companies with 20 to 35 times Mistral\u2019s valuation and vastly more capital, remains genuinely uncertain. But the question no longer seems absurd. And two years ago, it would have.
 
 That\u2019s progress. In the AI race, progress compounds.`,
-    cover_image: "https://picsum.photos/id/0/1200/800",
+    cover_image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80&auto=format&fit=crop",
     author: "Asit Anurag",
     category: "Deep Dive",
     topic_tags: ["AI", "European VC", "Foundation Models", "Semiconductors"],

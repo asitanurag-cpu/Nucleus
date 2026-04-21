@@ -6,10 +6,12 @@ const footerLinks = {
     { href: "/funding", label: "Funding Tracker" },
     { href: "/signals", label: "Signal Tracker" },
     { href: "/landscape", label: "VC Landscape" },
+    { href: "/tto", label: "TTO Tracker" },
     { href: "/library", label: "Library" },
   ],
   Company: [
     { href: "/about", label: "About" },
+    { href: "/methodology", label: "Methodology" },
     { href: "/newsletter", label: "Newsletter" },
   ],
   Connect: [
@@ -32,7 +34,8 @@ export function Footer() {
               <span className="font-display text-lg tracking-tight">Nucleus</span>
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-nucleus-text-muted">
-              The intelligence core of European venture capital.
+              Pre-funding signals and investment-grade analysis for Europe&apos;s
+              energy and climate ecosystem.
             </p>
           </div>
 

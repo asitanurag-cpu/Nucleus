@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { ExternalLink } from "lucide-react";
+import { cn, formatDate } from "@/lib/utils";
 import { Signal } from "@/lib/types";
 import { SIGNAL_TYPE_CONFIG } from "@/lib/constants";
 import { SectorTag } from "@/components/shared/SectorTag";
@@ -60,9 +63,28 @@ export function SignalCard({
               ))}
             </div>
           )}
+
+          {/* Source link + date; every signal is independently verifiable */}
+          <div className="mt-2 flex items-center gap-2 text-[11px] text-nucleus-text-muted">
+            <time dateTime={signal.signal_date}>{formatDate(signal.signal_date)}</time>
+            {signal.source_url && (
+              <>
+                <span className="text-nucleus-border">·</span>
+                <a
+                  href={signal.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1 text-nucleus-accent hover:underline"
+                >
+                  Source <ExternalLink className="h-2.5 w-2.5" />
+                </a>
+              </>
+            )}
+          </div>
         </div>
 
-        {/* Signal score with tooltip */}
+        {/* Signal score with tooltip linking to methodology */}
         <div className="group/score relative shrink-0">
           <div
             className={cn(
@@ -79,11 +101,18 @@ export function SignalCard({
               {signal.signal_score}
             </span>
           </div>
-          <div className="pointer-events-none absolute bottom-full right-0 z-50 mb-2 w-56 rounded-lg border border-nucleus-border bg-nucleus-dark p-2.5 text-left opacity-0 shadow-lg transition-opacity group-hover/score:opacity-100">
+          <div className="absolute bottom-full right-0 z-50 mb-2 w-60 rounded-lg border border-nucleus-border bg-nucleus-dark p-2.5 text-left opacity-0 shadow-lg transition-opacity group-hover/score:opacity-100 pointer-events-none group-hover/score:pointer-events-auto">
             <p className="mb-1 text-[10px] font-semibold text-nucleus-text-primary">Nucleus Signal Score</p>
             <p className="text-[10px] leading-relaxed text-nucleus-text-secondary">
               Composite 0–100 across Team Strength (25), Market Timing (25), Deal Velocity (25), Signal Quality (25). 75+ = High Conviction.
             </p>
+            <Link
+              href="/methodology"
+              onClick={(e) => e.stopPropagation()}
+              className="mt-1.5 inline-block text-[10px] font-semibold text-nucleus-accent hover:underline"
+            >
+              Read full methodology →
+            </Link>
             <div className="absolute -bottom-1 right-4 h-2 w-2 rotate-45 border-b border-r border-nucleus-border bg-nucleus-dark" />
           </div>
         </div>

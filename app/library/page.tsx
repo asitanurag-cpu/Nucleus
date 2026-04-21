@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Library | Nucleus",
   description:
-    "Premium resources for European startup founders and investors. Long-form editorial, fundraising playbooks, and VC frameworks.",
+    "Premium resources for European startup founders and investors. Long-form editorial, fundraising guides, and VC frameworks.",
 };
 
 export default function LibraryPage() {
@@ -28,7 +28,7 @@ export default function LibraryPage() {
           Library
         </h1>
         <p className="mt-3 max-w-2xl text-lg text-nucleus-text-secondary">
-          Long-form editorial, fundraising playbooks, and VC frameworks — built
+          Long-form editorial, fundraising guides, and VC frameworks; built
           from direct experience screening 100+ deals across European tech.
         </p>
       </div>
@@ -114,12 +114,12 @@ export default function LibraryPage() {
         </div>
       </section>
 
-      {/* ─── Playbooks Section ─── */}
+      {/* ─── Founder Guides Section ─── */}
       <section>
         <div className="mb-6 flex items-center gap-3">
           <BookOpen className="h-5 w-5 text-nucleus-accent" />
           <h2 className="font-display text-2xl tracking-tight text-nucleus-text-primary">
-            Founder Playbooks
+            Founder Guides
           </h2>
         </div>
         <p className="mb-8 max-w-3xl text-sm leading-relaxed text-nucleus-text-secondary">

@@ -66,6 +66,20 @@ export const INTEL_SIGNAL_TYPE_CONFIG: Record<
     label: "KVK Spin-off",
     chipClass: "bg-teal-500/15 text-teal-400 border border-teal-500/20",
   },
+  // Pre-company types; styling is a cooler, more research-coded palette so
+  // pre-company signals are visually distinct from funded-company signals.
+  patent_granted: {
+    label: "Patent Granted",
+    chipClass: "bg-sky-500/15 text-sky-400 border border-sky-500/20",
+  },
+  cordis_completion: {
+    label: "CORDIS Completion",
+    chipClass: "bg-blue-500/15 text-blue-400 border border-blue-500/20",
+  },
+  spinout_programme_acceptance: {
+    label: "Spin-out Programme",
+    chipClass: "bg-indigo-500/15 text-indigo-400 border border-indigo-500/20",
+  },
 };
 
 // Score colour mapping: grey < 40, amber 40-69, green >= 70

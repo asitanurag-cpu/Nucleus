@@ -8,28 +8,50 @@ import { MetricCard } from "@/components/shared/MetricCard";
 import { NewsletterCTA } from "@/components/shared/NewsletterCTA";
 import { articles } from "@/lib/data/articles";
 import { signals } from "@/lib/data/signals";
+import { intelSignals } from "@/lib/data/intel-signals";
 import { fundingRounds } from "@/lib/data/funding-rounds";
+import { vcFirms } from "@/lib/data/vc-firms";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { STAGE_LABELS } from "@/lib/constants";
 import { StageTag as StageTagType } from "@/lib/types";
 
 export default function HomePage() {
-  // Dynamic metric computations
+  // Dynamic metric computations; counters must match the destination pages
+  // they link to, so every figure is derived from real data, not hardcoded.
   const startupsTracked = new Set([
     ...articles.map((a) => a.title),
     ...signals.map((s) => s.startup_name),
+    ...intelSignals.filter((s) => s.is_published).map((s) => s.company_name),
   ]).size;
 
   const countriesCovered = new Set([
     ...signals.map((s) => s.country),
     ...fundingRounds.map((f) => f.country),
+    ...vcFirms.map((v) => v.hq_country),
   ]).size;
 
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-  const signalsThisWeek = signals.filter(
-    (s) => new Date(s.signal_date) >= oneWeekAgo
-  ).length || signals.length;
+  // Use a quarter window so the counter is credible year-round; the label
+  // below adapts to stay honest.
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  const signalsThisQuarter = [
+    ...signals.filter((s) => new Date(s.signal_date) >= ninetyDaysAgo),
+    ...intelSignals.filter(
+      (s) =>
+        s.is_published &&
+        new Date(s.source_published_at ?? s.created_at) >= ninetyDaysAgo
+    ),
+  ].length;
+  const totalSignalsTracked =
+    signals.length + intelSignals.filter((s) => s.is_published).length;
+  // Show quarterly figure when it is credible (>= 5); otherwise fall back to
+  // a lifetime "tracked" label so we never display inflated week counts.
+  const signalsDisplay =
+    signalsThisQuarter >= 5
+      ? { value: signalsThisQuarter, label: "Signals This Quarter" }
+      : { value: totalSignalsTracked, label: "Signals Tracked" };
+
+  const fundsMapped = vcFirms.length;
 
   const publishedArticles = articles
     .filter((a) => a.status === "published")
@@ -51,13 +73,29 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-[1200px] px-4 py-20 lg:px-6 lg:py-28">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-display text-4xl tracking-tight text-nucleus-text-primary md:text-5xl lg:text-6xl">
-              The intelligence core of{" "}
-              <span className="text-nucleus-accent">European venture capital.</span>
+              Energy and climate intelligence,{" "}
+              <span className="text-nucleus-accent">before the round closes.</span>
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-nucleus-text-secondary md:text-xl">
               Pre-funding signals and investment-grade analysis
               <br className="hidden md:block" />
-              for the European ecosystem.
+              for Europe&apos;s energy and climate ecosystem.
+            </p>
+            {/* Covering strip; sets scope without forcing a scroll on 1440×900 */}
+            <p className="mt-5 text-xs leading-relaxed text-nucleus-text-muted md:text-sm">
+              <span className="font-semibold uppercase tracking-wider text-nucleus-text-secondary">Covering</span>
+              <span className="mx-2 text-nucleus-border">·</span>
+              Distributed Energy
+              <span className="mx-2 text-nucleus-border">·</span>
+              Digital Utilities
+              <span className="mx-2 text-nucleus-border">·</span>
+              Industrial Energy Management
+              <span className="mx-2 text-nucleus-border">·</span>
+              Built Environment
+              <span className="mx-2 text-nucleus-border">·</span>
+              Mobility &amp; Transport
+              <span className="mx-2 text-nucleus-border">·</span>
+              AI &amp; Enabling Tech
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -75,18 +113,19 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Stats bar — dynamic + linked */}
-          <div className="mx-auto mt-16 flex max-w-2xl items-center justify-center gap-8 rounded-card border border-nucleus-border bg-nucleus-surface/50 px-8 py-5 backdrop-blur-sm md:gap-12">
+          {/* Stats bar; every figure is live and links to its source page */}
+          <div className="mx-auto mt-16 grid max-w-3xl grid-cols-2 items-center justify-center gap-6 rounded-card border border-nucleus-border bg-nucleus-surface/50 px-8 py-5 backdrop-blur-sm md:grid-cols-4 md:gap-8">
             <Link href="/signals" className="transition-colors hover:opacity-80">
               <MetricCard value={`${startupsTracked}`} label="Startups Tracked" />
             </Link>
-            <div className="h-8 w-px bg-nucleus-border" />
             <Link href="/landscape" className="transition-colors hover:opacity-80">
               <MetricCard value={`${countriesCovered}`} label="Countries Covered" />
             </Link>
-            <div className="h-8 w-px bg-nucleus-border" />
             <Link href="/signals" className="transition-colors hover:opacity-80">
-              <MetricCard value={`${signalsThisWeek}`} label="Signals This Week" />
+              <MetricCard value={`${signalsDisplay.value}`} label={signalsDisplay.label} />
+            </Link>
+            <Link href="/landscape" className="transition-colors hover:opacity-80">
+              <MetricCard value={`${fundsMapped}`} label="Funds Mapped" />
             </Link>
           </div>
         </div>

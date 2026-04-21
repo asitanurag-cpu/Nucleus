@@ -23,7 +23,11 @@ export type EnergySignalType =
   | "patent_filing"
   | "rvo_grant_award"
   | "nwo_research_award"
-  | "kvk_spinoff";
+  | "kvk_spinoff"
+  // Pre-company signal types; describe events before a company exists.
+  | "patent_granted"
+  | "cordis_completion"
+  | "spinout_programme_acceptance";
 
 export type IntelSignalType = AgriSignalType | EnergySignalType;
 
@@ -43,6 +47,25 @@ export interface IntelSignal {
   is_published: boolean;
   created_at: string;
   updated_at: string;
+  // Pre-company signal fields (see PRD P1-09). When pre_company is true, the
+  // company_name field may hold a research group or PI label and the signal
+  // is grouped against an institution rather than a company.
+  pre_company?: boolean;
+  institution_slug?: string;
+}
+
+export interface TTOInstitution {
+  slug: string;
+  name: string;
+  city: string;
+  country: "NL" | "DE" | "CH" | "SE" | "UK" | "FR" | "BE" | "AT" | "DK";
+  spinout_programme_name?: string;
+  programme_url?: string;
+  tto_contact_name?: string;
+  tto_contact_email?: string;
+  energy_focus_description: string;
+  recent_spinouts: string[];
+  active_opportunities?: number;
 }
 
 export interface WatchlistEntry {

@@ -10,6 +10,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/playbooks",
+        destination: "/library",
+        permanent: true,
+      },
+      {
+        source: "/playbooks/:slug",
+        destination: "/library/:slug",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

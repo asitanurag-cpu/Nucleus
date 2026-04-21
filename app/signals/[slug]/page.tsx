@@ -167,11 +167,14 @@ export default async function SignalProfilePage({ params }: { params: Params }) 
               <p className="text-xs font-semibold uppercase tracking-[0.05em] text-nucleus-text-muted">Signal Score</p>
               <div className="group relative">
                 <Info className="h-3.5 w-3.5 text-nucleus-text-muted cursor-help" />
-                <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-lg border border-nucleus-border bg-nucleus-dark p-3 text-left opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                <div className="absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-lg border border-nucleus-border bg-nucleus-dark p-3 text-left opacity-0 shadow-lg transition-opacity group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
                   <p className="mb-1.5 text-xs font-semibold text-nucleus-text-primary">Nucleus Signal Score</p>
                   <p className="text-[11px] leading-relaxed text-nucleus-text-secondary">
                     Composite score (0–100) across four equal dimensions: Team Strength (25pts), Market Timing (25pts), Deal Velocity (25pts), Signal Quality (25pts). Scores 75+ are tracked as High Conviction.
                   </p>
+                  <Link href="/methodology" className="mt-2 inline-block text-[11px] font-semibold text-nucleus-accent hover:underline">
+                    Read full methodology →
+                  </Link>
                   <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-b border-r border-nucleus-border bg-nucleus-dark" />
                 </div>
               </div>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Zap, Filter } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Zap, Filter, Building2 } from "lucide-react";
 import { intelSignals } from "@/lib/data/intel-signals";
 import { energyWatchlist } from "@/lib/data/watchlist-data";
 import { IntelSignalCard } from "@/components/signals/IntelSignalCard";
@@ -9,6 +10,7 @@ import { WeeklyWatchlistPanel } from "@/components/signals/WeeklyWatchlistPanel"
 import { INTEL_SIGNAL_TYPE_CONFIG } from "@/lib/signal-type-config";
 import { EmptyState } from "@/components/shared/EmptyState";
 import type { EnergySignalType } from "@/lib/types/signals";
+import { ttoInstitutions } from "@/lib/data/tto-institutions";
 
 const ENERGY_TYPES: EnergySignalType[] = [
   "ipcei_milestone",
@@ -23,14 +25,31 @@ const ENERGY_TYPES: EnergySignalType[] = [
 ];
 
 export default function EnergySignalsPage() {
+  const searchParams = useSearchParams();
   const [selectedTypes, setSelectedTypes] = useState<EnergySignalType[]>([]);
   const [minScore, setMinScore] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [preCompanyOnly, setPreCompanyOnly] = useState(false);
+  const [institutionFilter, setInstitutionFilter] = useState<string | null>(null);
+
+  // Honour `?institution=<slug>` from the TTO tracker deep links; when set,
+  // we automatically switch to the pre-company view.
+  useEffect(() => {
+    const inst = searchParams.get("institution");
+    if (inst) {
+      setInstitutionFilter(inst);
+      setPreCompanyOnly(true);
+    }
+  }, [searchParams]);
 
   const energySignals = useMemo(
     () =>
       intelSignals
         .filter((s) => s.vertical === "energy" && s.is_published)
+        .filter((s) => (preCompanyOnly ? s.pre_company === true : true))
+        .filter((s) =>
+          institutionFilter ? s.institution_slug === institutionFilter : true
+        )
         .filter((s) =>
           selectedTypes.length > 0
             ? selectedTypes.includes(s.signal_type as EnergySignalType)
@@ -41,13 +60,17 @@ export default function EnergySignalsPage() {
           (a, b) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         ),
-    [selectedTypes, minScore]
+    [selectedTypes, minScore, preCompanyOnly, institutionFilter]
   );
 
   const toggleType = (t: EnergySignalType) =>
     setSelectedTypes((prev) =>
       prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
     );
+
+  const activeInstitution = institutionFilter
+    ? ttoInstitutions.find((i) => i.slug === institutionFilter)
+    : undefined;
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-10 lg:px-6">
@@ -72,20 +95,47 @@ export default function EnergySignalsPage() {
       {/* Watchlist */}
       <WeeklyWatchlistPanel vertical="energy" entries={energyWatchlist} />
 
-      {/* Filter toggle */}
-      <div className="mb-4 flex items-center gap-3">
+      {/* Filter toggle + pre-company switch */}
+      <div className="mb-4 flex flex-wrap items-center gap-3">
         <button
           onClick={() => setShowFilters(!showFilters)}
           className="inline-flex items-center gap-2 rounded-button border border-nucleus-border bg-nucleus-surface px-3 py-1.5 text-xs font-medium text-nucleus-text-secondary transition-colors hover:bg-nucleus-surface-hover"
         >
           <Filter className="h-3.5 w-3.5" />
           Filters
-          {(selectedTypes.length + (minScore > 0 ? 1 : 0)) > 0 && (
+          {selectedTypes.length + (minScore > 0 ? 1 : 0) > 0 && (
             <span className="rounded-full bg-nucleus-accent px-1.5 py-0.5 text-[10px] text-white">
               {selectedTypes.length + (minScore > 0 ? 1 : 0)}
             </span>
           )}
         </button>
+        <button
+          onClick={() => {
+            setPreCompanyOnly((v) => !v);
+            if (preCompanyOnly) setInstitutionFilter(null);
+          }}
+          className={`inline-flex items-center gap-2 rounded-button border px-3 py-1.5 text-xs font-medium transition-colors ${
+            preCompanyOnly
+              ? "border-sky-400/60 bg-sky-500/15 text-sky-300"
+              : "border-nucleus-border bg-nucleus-surface text-nucleus-text-secondary hover:bg-nucleus-surface-hover"
+          }`}
+          aria-pressed={preCompanyOnly}
+        >
+          <Building2 className="h-3.5 w-3.5" />
+          Pre-company signals
+        </button>
+        {activeInstitution && (
+          <span className="inline-flex items-center gap-2 rounded-button border border-sky-400/30 bg-sky-500/10 px-3 py-1.5 text-xs text-sky-300">
+            Institution: {activeInstitution.name}
+            <button
+              onClick={() => setInstitutionFilter(null)}
+              className="text-sky-300/70 hover:text-sky-300"
+              aria-label="Clear institution filter"
+            >
+              ×
+            </button>
+          </span>
+        )}
         <span className="text-xs text-nucleus-text-muted">
           {energySignals.length} signal{energySignals.length !== 1 ? "s" : ""}
         </span>
@@ -134,6 +184,8 @@ export default function EnergySignalsPage() {
             onClick={() => {
               setSelectedTypes([]);
               setMinScore(0);
+              setPreCompanyOnly(false);
+              setInstitutionFilter(null);
             }}
             className="text-[11px] text-nucleus-text-muted hover:text-nucleus-accent transition-colors"
           >

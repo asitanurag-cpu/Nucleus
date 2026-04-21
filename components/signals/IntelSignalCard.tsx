@@ -1,11 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { INTEL_SIGNAL_TYPE_CONFIG, getIntelScoreStyle } from "@/lib/signal-type-config";
 import type { IntelSignal } from "@/lib/types/signals";
-import { ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { ExternalLink, ChevronDown, ChevronUp, HelpCircle, Building2 } from "lucide-react";
 
 export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
   const [expanded, setExpanded] = useState(false);
@@ -20,13 +21,19 @@ export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
       onClick={() => setExpanded(!expanded)}
       className={cn(
         "group cursor-pointer rounded-card border border-nucleus-border bg-nucleus-surface p-4 transition-all hover:border-nucleus-accent/30 hover:shadow-glow",
-        expanded && "border-nucleus-accent/40 shadow-glow"
+        expanded && "border-nucleus-accent/40 shadow-glow",
+        // Visual accent for pre-company signals; blue-left marker keeps the
+        // distinction subtle while making the research-stage origin obvious.
+        signal.pre_company && "border-l-[3px] border-l-sky-400/70"
       )}
     >
       {/* Top row: company + type chip + score */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="mb-2 flex items-center gap-2 flex-wrap">
+            {signal.pre_company && (
+              <Building2 className="h-4 w-4 shrink-0 text-sky-400" aria-label="Pre-company signal" />
+            )}
             <h3 className="text-sm font-semibold text-nucleus-text-primary group-hover:text-nucleus-accent transition-colors">
               {signal.company_name}
             </h3>
@@ -89,18 +96,28 @@ export function IntelSignalCard({ signal }: { signal: IntelSignal }) {
           </div>
         </div>
 
-        {/* Score badge */}
-        <div
-          className={cn(
-            "flex h-11 w-11 shrink-0 items-center justify-center rounded-card border",
-            scoreStyle.bg,
-            scoreStyle.border
-          )}
-          title={`Fundraise Probability: ${signal.fundraise_probability_score}/100`}
-        >
-          <span className={cn("font-mono text-sm font-bold", scoreStyle.text)}>
-            {signal.fundraise_probability_score}
-          </span>
+        {/* Score badge with methodology link */}
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <div
+            className={cn(
+              "flex h-11 w-11 items-center justify-center rounded-card border",
+              scoreStyle.bg,
+              scoreStyle.border
+            )}
+            title={`Nucleus Score: ${signal.fundraise_probability_score}/100`}
+          >
+            <span className={cn("font-mono text-sm font-bold", scoreStyle.text)}>
+              {signal.fundraise_probability_score}
+            </span>
+          </div>
+          <Link
+            href="/methodology"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-0.5 text-[9px] font-semibold uppercase tracking-wider text-nucleus-text-muted hover:text-nucleus-accent"
+            title="How the Nucleus Score is calculated"
+          >
+            <HelpCircle className="h-2.5 w-2.5" /> Score
+          </Link>
         </div>
       </div>
     </article>
