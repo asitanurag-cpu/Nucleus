@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { signals } from "@/lib/data/signals";
+import { getSignals } from "@/lib/supabase/queries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const sector = searchParams.get("sector");
   const country = searchParams.get("country");
 
-  let filtered = [...signals];
+  let filtered = await getSignals();
 
   if (type) {
     const types = type.split(",");

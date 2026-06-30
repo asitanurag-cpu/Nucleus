@@ -7,8 +7,7 @@ import {
   getIntelScoreStyle,
   INTEL_SIGNAL_TYPE_CONFIG,
 } from "@/lib/signal-type-config";
-import { intelSignals } from "@/lib/data/intel-signals";
-import type { WatchlistEntry } from "@/lib/types/signals";
+import type { WatchlistEntry, IntelSignal } from "@/lib/types/signals";
 import { Eye, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
 const PANEL_CONFIG: Record<string, { title: string; description: string }> = {
@@ -28,16 +27,18 @@ function WatchlistCard({
   entry,
   index,
   vertical,
+  allSignals,
 }: {
   entry: WatchlistEntry;
   index: number;
   vertical: string;
+  allSignals: IntelSignal[];
 }) {
   const [expanded, setExpanded] = useState(false);
   const scoreStyle = getIntelScoreStyle(entry.score);
 
   const companySignals = expanded
-    ? intelSignals
+    ? allSignals
         .filter(
           (s) =>
             s.vertical === vertical &&
@@ -157,9 +158,11 @@ function WatchlistCard({
 export function WeeklyWatchlistPanel({
   vertical,
   entries,
+  allSignals = [],
 }: {
   vertical: "agrifood" | "energy";
   entries: WatchlistEntry[];
+  allSignals?: IntelSignal[];
 }) {
   const config = PANEL_CONFIG[vertical];
 
@@ -189,6 +192,7 @@ export function WeeklyWatchlistPanel({
               entry={entry}
               index={index}
               vertical={vertical}
+              allSignals={allSignals}
             />
           ))}
         </div>

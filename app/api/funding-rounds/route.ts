@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fundingRounds } from "@/lib/data/funding-rounds";
+import { getFundingRounds } from "@/lib/supabase/queries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const stage = searchParams.get("stage");
   const country = searchParams.get("country");
 
-  let filtered = [...fundingRounds];
+  let filtered = await getFundingRounds();
 
   if (sector) {
     const sectors = sector.split(",");

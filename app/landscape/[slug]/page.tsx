@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Linkedin, Star, Building2 } from "lucide-react";
-import { vcFirms } from "@/lib/data/vc-firms";
+import { getVcFirms } from "@/lib/supabase/queries";
 import { SectorTag } from "@/components/shared/SectorTag";
 import { StageTag } from "@/components/shared/StageTag";
 import { STAGE_LABELS } from "@/lib/constants";
@@ -13,6 +13,7 @@ type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
+  const vcFirms = await getVcFirms();
   const firm = vcFirms.find((f) => f.slug === slug);
   if (!firm) return { title: "VC Firm Not Found | Nucleus" };
   return {
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export async function generateStaticParams() {
+  const vcFirms = await getVcFirms();
   return vcFirms.map((f) => ({ slug: f.slug }));
 }
 
@@ -41,6 +43,7 @@ function StarRating({ rating }: { rating: number }) {
 
 export default async function VCProfilePage({ params }: { params: Params }) {
   const { slug } = await params;
+  const vcFirms = await getVcFirms();
   const firm = vcFirms.find((f) => f.slug === slug);
   if (!firm) notFound();
 

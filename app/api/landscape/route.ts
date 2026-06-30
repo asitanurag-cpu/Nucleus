@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { vcFirms } from "@/lib/data/vc-firms";
+import { getVcFirms } from "@/lib/supabase/queries";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const country = searchParams.get("country");
   const search = searchParams.get("q");
 
-  let filtered = [...vcFirms];
+  let filtered = await getVcFirms();
 
   if (search) {
     const q = search.toLowerCase();

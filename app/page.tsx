@@ -7,15 +7,19 @@ import { StageTag } from "@/components/shared/StageTag";
 import { MetricCard } from "@/components/shared/MetricCard";
 import { NewsletterCTA } from "@/components/shared/NewsletterCTA";
 import { articles } from "@/lib/data/articles";
-import { signals } from "@/lib/data/signals";
-import { intelSignals } from "@/lib/data/intel-signals";
-import { fundingRounds } from "@/lib/data/funding-rounds";
-import { vcFirms } from "@/lib/data/vc-firms";
+import { getSignals, getIntelSignals, getFundingRounds, getVcFirms } from "@/lib/supabase/queries";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { STAGE_LABELS } from "@/lib/constants";
 import { StageTag as StageTagType } from "@/lib/types";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [signals, intelSignals, fundingRounds, vcFirms] = await Promise.all([
+    getSignals(),
+    getIntelSignals(),
+    getFundingRounds(),
+    getVcFirms(),
+  ]);
+
   // Dynamic metric computations; counters must match the destination pages
   // they link to, so every figure is derived from real data, not hardcoded.
   const startupsTracked = new Set([

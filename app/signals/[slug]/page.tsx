@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ExternalLink, Linkedin, Info } from "lucide-react";
-import { signals } from "@/lib/data/signals";
+import { getSignals } from "@/lib/supabase/queries";
 import { SectorTag } from "@/components/shared/SectorTag";
 import { SIGNAL_TYPE_CONFIG, STAGE_LABELS } from "@/lib/constants";
 import { getScoreColor, getScoreBg } from "@/lib/signal-score";
@@ -14,6 +14,7 @@ type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
+  const signals = await getSignals();
   const signal = signals.find((s) => s.startup_slug === slug);
   if (!signal) return { title: "Signal Not Found | Nucleus" };
   return {
@@ -30,12 +31,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export async function generateStaticParams() {
+  const signals = await getSignals();
   return signals.map((s) => ({ slug: s.startup_slug }));
 }
 
 export default async function SignalProfilePage({ params }: { params: Params }) {
   const { slug } = await params;
-  // Aggregate all signals for this startup
+  const signals = await getSignals();
   const startupSignals = signals.filter((s) => s.startup_slug === slug);
   if (startupSignals.length === 0) notFound();
 
